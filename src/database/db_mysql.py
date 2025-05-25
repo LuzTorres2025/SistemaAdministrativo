@@ -1,5 +1,10 @@
 from decouple import config
+
 import pymysql
+import traceback
+
+from src.utils.Logger import Logger
+
 
 
 def get_connection():
@@ -11,4 +16,5 @@ def get_connection():
             db-config('MYSQL_DB')
         )
     except Exception as ex:
-        print(ex)
+        Logger.add_to_log("error", str(ex))
+        Logger.add_to_log("error", traceback.format_exc())

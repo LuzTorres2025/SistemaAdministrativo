@@ -1,4 +1,4 @@
-class language():
+class Language():
 #_________________CORREGIR TERCERA LINEA_________#
     def __init__(self, id, name)->None:
         self.id=id

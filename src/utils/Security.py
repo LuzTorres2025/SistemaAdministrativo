@@ -1,7 +1,12 @@
 from decouple import config
+
 import datetime
 import jwt
 import pytz
+import traceback
+
+
+from src.utils.Logger import Logger
 
 
 class Security():
@@ -11,15 +16,19 @@ class Security():
 
     @classmethod
     def generate_token(cls, authenticated_user):
-        payload = {
-            'iat': datetime.datetime.now(tz=cls.tz),
-            'exp': datetime.datetime.now(tz=cls.tz) + datetime.timedelta(minutes=10),
-            'username': authenticated_user.username,
-            'fullname': authenticated_user.fullname,
-            'roles': ['Administrator', 'Editor']
-        }
-        return jwt.encode(payload, cls.secret, algorithm="HS256")
-    
+        try:
+
+            payload = {
+                'iat': datetime.datetime.now(tz=cls.tz),
+                'exp': datetime.datetime.now(tz=cls.tz) + datetime.timedelta(minutes=10),
+                'username': authenticated_user.username,
+                'fullname': authenticated_user.fullname,
+                'roles': ['Administrator', 'Editor']
+            }
+            return jwt.encode(payload, cls.secret, algorithm="HS256")
+        except Exception as ex:
+            Logger.add_to_log("error", str(ex))
+            Logger.add_to_log("error", traceback.format_exc())
     @classmethod
     def verify_token(cls, headers):
         try:
